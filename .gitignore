@@ -1,5 +1,6 @@
 # Custom to this project
 energy_data/
+*.hyper
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
