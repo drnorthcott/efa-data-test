@@ -84,7 +84,5 @@ def clean_temperature_data(data):
 
     Returns: An updated dataframe with temperature limits applied.
     """
-
     data['VALUE'] = data.apply(lambda x: _limit_temp_deg_c_minimum(x['signal_name'], x['VALUE']), axis=1)
-    
     return data
