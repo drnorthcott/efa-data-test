@@ -21,26 +21,26 @@ If this doesn't render for you, paste the block into the [Mermaid Live Editor](h
 ```mermaid
 graph TD
     A[<b>signals_data</b><br>files per date and signal] -->|"multiple pd.read_csv()"| B("<b>signal_df</b><br>Combined time sequence dataframe of signal:value pairs")
-    X[<b>alerts_data</b><br>A file with alerts and timestamps] -->|"pd.read_csv()"| Y("<b>alerts_df</b><br>Time sequence dataframe of alerts")
+    X[<b>alerts_data</b><br>A file with alerts and timestamps] -->|"pd.read_csv()"| Y("<b>alert_df</b><br>Time sequence dataframe of alerts")
     
     B --> TS
         subgraph TS["Thermal Signals - Per SITE/ASSET/COMPONENT"]
-            TS_A["<b>pd.pivot_table(signals_df)</b><br>time sequence columnar structure"] --> TS_B["<b>interpolate() and dropna()</b><br>Select LM_handleNeg/PosCoreTempDegC signal timebase"]
+            TS_A["<b>pd.pivot_table(signal_df)</b><br>time sequence columnar structure"] --> TS_B["<b>interpolate() and dropna()</b><br>Select LM_handleNeg/PosCoreTempDegC signal timebase"]
             TS_B -->|Rolling Average Temp and Power Signals| TS_C["<b>thermal_signal_issues</b><br>Thermal Excursion Records<br>per SITE/ASSET/COMPONENT"]
         end;
     TS --> E["<b>thermal_signal_issues.csv</b><br>Combined thermal excursion events<br>for all SITE/ASSET/COMPONENTS"]
 
     B --> DA
         subgraph DA["Daily Aggregations - Per SITE/ASSET/COMPONENT"]
-            DA_A["<b>pd.pivot_table(signals_df)</b><br>time sequence columnar structure"] --> DA_B["<b>interpolate() and dropna()</b><br>Select LM_handleNeg/PosCoreTempDegC signal timebase"]
+            DA_A["<b>pd.pivot_table(signal_df)</b><br>time sequence columnar structure"] --> DA_B["<b>interpolate() and dropna()</b><br>Select LM_handleNeg/PosCoreTempDegC signal timebase"]
             DA_B -->|Aggregations| DA_C["<b>daily_aggregations</b><br>Daily aggregations with a metric per column<br>per SITE/ASSET/COMPONENT"]
         end;
     DA --> G["<b>daily_aggregations.csv</b><br>Combined daily aggregations<br>for all SITE/ASSET/COMPONENTS"]
 
     B & Y --> TA
         subgraph TA["Thermal Alerts - Per SITE/ASSET/COMPONENT"]
-            TA_A["<b>pd.pivot_table(signals_df)</b><br>time sequence columnar structure"] --> TA_B["<b>outer merge of signals and alerts</b><br>Adds alert_name column"]
-            alerts["<b>alerts_df</b><br>Specific alerts for the<br>SITE/ASSET/COMPONENT"] --> TA_B
+            TA_A["<b>pd.pivot_table(signal_df)</b><br>time sequence columnar structure"] --> TA_B["<b>outer merge of signals and alerts</b><br>Adds alert_name column"]
+            alerts["<b>alert_df</b><br>Specific alerts for the<br>SITE/ASSET/COMPONENT"] --> TA_B
             TA_B --> TA_C["<b>ffill() and dropna()</b><br>Select alert_name events as timebase"]
             TA_C --> TA_D["<b>daily_aggregations</b><br>Daily aggregations with a metric per column<br>per SITE/ASSET/COMPONENT"]
         end;
